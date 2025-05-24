@@ -1,0 +1,66 @@
+---
+- name: Install script k3s for master node
+  hosts: master
+  remote_user: nmtri7a1
+  become: true
+  vars:
+    k3s_token: "mynodetoken"
+    k3s_install_script: "/tmp/k3s-install.sh"
+
+  tasks:
+    - name: Exec script to install k8s in master node
+      ansible.builtin.get_url:
+        url: https://get.k3s.io
+        dest: "{{ k3s_install_script }}"
+        mode: "0755"
+        timeout: 30
+        validate_certs: true
+    - name: Install k3s on master node
+      ansible.builtin.command: "{{ k3s_install_script }}"
+      args:
+        creates: /usr/local/bin/k3s
+      environment:
+        K3S_TOKEN: "{{ k3s_token }}"
+        INSTALL_K3S_EXEC: "--disable=traefik --write-kubeconfig-mode=644"
+
+    - name: Clean up installation script
+      ansible.builtin.file:
+        path: "{{ k3s_install_script }}"
+        state: absent
+    - name: Get k3s token from master
+      ansible.builtin.slurp:
+        src: /var/lib/rancher/k3s/server/node-token
+      register: k3s_node_token
+    - name: Set k3s token fact
+      ansible.builtin.set_fact:
+        k3s_actual_token: "{{ k3s_node_token.content | b64decode | trim }}"
+
+- name: Install script k3s for worker node
+  hosts: worker
+  remote_user: nmtri7a1
+  become: true
+  vars:
+    k3s_install_script: "/tmp/k3s-install.sh"
+    k3s_server_ip: "{{ groups['master'][0] }}"
+
+  tasks:
+    - name: Download k3s installation script
+      ansible.builtin.get_url:
+        url: https://get.k3s.io
+        dest: "{{ k3s_install_script }}"
+        mode: "0755"
+        timeout: 30
+        validate_certs: true
+
+    - name: Install k3s on worker nodes
+      ansible.builtin.command: "{{ k3s_install_script }}"
+      args:
+        creates: /usr/local/bin/k3s
+      environment:
+        K3S_URL: "https://{{ k3s_server_ip }}:6443"
+        K3S_TOKEN: "{{ hostvars[groups['master'][0]]['k3s_actual_token'] }}"
+
+    - name: Clean up installation script
+      ansible.builtin.file:
+        path: "{{ k3s_install_script }}"
+        state: absent
