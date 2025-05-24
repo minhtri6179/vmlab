@@ -22,4 +22,8 @@
         <td><a href="https://k3s.io">Ansible</a></td>
         <td>kube lightweight</td>
     </tr>
+    <td><img width="32" src="https://img.shields.io/badge/nginx-%23009639.svg?style=for-the-badge&logo=nginx&logoColor=white"></td>
+        <td><a href="https://nginx.org/">Nginx</a></td>
+        <td>kube lightweight</td>
+    </tr>
 </table>
