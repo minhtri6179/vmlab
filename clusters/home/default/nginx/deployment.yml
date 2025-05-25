@@ -3,6 +3,7 @@ kind: Deployment
 metadata: 
   name: nginx-deployment
   namespace: default 
+  
 spec:
   selector:
     matchLabels:
