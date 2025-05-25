@@ -20,10 +20,10 @@
     <tr>
     <td><img width="32" src="https://img.shields.io/badge/ansible-%231A1918.svg?style=for-the-badge&logo=ansible&logoColor=white"></td>
         <td><a href="https://k3s.io">Ansible</a></td>
-        <td>kube lightweight</td>
+        <td>automates provisioning, configuration</td>
     </tr>
     <td><img width="32" src="https://img.shields.io/badge/nginx-%23009639.svg?style=for-the-badge&logo=nginx&logoColor=white"></td>
         <td><a href="https://nginx.org/">Nginx</a></td>
-        <td>kube lightweight</td>
+        <td>Nginx web server</td>
     </tr>
 </table>
