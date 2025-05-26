@@ -1,0 +1,10 @@
+apiVersion: source.toolkit.fluxcd.io/v1
+kind: GitRepository
+metadata:
+  name: vmlab
+  namespace: flux-system
+spec:
+  interval: 1m
+  url: https://github.com/minhtri6179/vmlab
+  ref:
+    branch: main
